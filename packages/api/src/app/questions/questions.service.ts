@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 
 import { QuestionEntity } from '@3via/core';
 
@@ -63,6 +63,8 @@ export class QuestionsService {
 
   async deleteQuestion(id: QuestionEntity.Question['id']) {
     questions = questions.filter((question) => question.id !== id);
+
+    return undefined;
   }
 
   async updateQuestion(updatedQuestion: QuestionEntity.Question) {
@@ -70,11 +72,13 @@ export class QuestionsService {
       question.id === updatedQuestion.id ? updatedQuestion : question
     );
 
-    return questions;
+    return updatedQuestion;
   }
 
   async saveQuestions(reorderedQuestions: QuestionEntity.Question[]) {
     questions = reorderedQuestions;
+
+    return questions;
   }
 
   async createQuestion(dto: QuestionEntity.CreateQuestionDto) {

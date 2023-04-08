@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 
 const createAnswerDtoParser = z.object({
   title: z.string(),
-  points: z.number(),
+  points: z.preprocess((value) => Number(value), z.number()),
 });
 
 export type CreateAnswerDto = z.infer<typeof createAnswerDtoParser>;
@@ -21,4 +21,4 @@ const create = (dto: CreateAnswerDto, id = uuid()): Answer => ({
   ...dto,
 });
 
-export { create, answerParser };
+export { create, answerParser, createAnswerDtoParser };

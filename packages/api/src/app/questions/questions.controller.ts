@@ -18,25 +18,31 @@ export class QuestionsController {
   constructor(private readonly questionService: QuestionsService) {}
 
   @Get(AppUrls.questions)
-  async getQuestions() {
+  async getQuestions(): Promise<QuestionEntity.Question[]> {
     return this.questionService.getQuestions();
   }
 
   @Post(AppUrls.questions)
   @UsePipes(new ZodValidationPipe(QuestionEntity.createQuestionDtoParser))
-  async createQuestion(@Body() dto: QuestionEntity.CreateQuestionDto) {
+  async createQuestion(
+    @Body() dto: QuestionEntity.CreateQuestionDto
+  ): Promise<QuestionEntity.Question> {
     return this.questionService.createQuestion(dto);
   }
 
   @Put(AppUrls.questions)
   @UsePipes(new ZodValidationPipe(QuestionEntity.questionsParser))
-  async updateQuestions(@Body() dto: QuestionEntity.Question[]) {
+  async updateQuestions(
+    @Body() dto: QuestionEntity.Question[]
+  ): Promise<QuestionEntity.Question[]> {
     return this.questionService.saveQuestions(dto);
   }
 
   @Put(AppUrls.question)
-  @UsePipes(new ZodValidationPipe(QuestionEntity.questionsParser))
-  async updateQuestion(@Body() dto: QuestionEntity.Question) {
+  @UsePipes(new ZodValidationPipe(QuestionEntity.questionParser))
+  async updateQuestion(
+    @Body() dto: QuestionEntity.Question
+  ): Promise<QuestionEntity.Question> {
     return this.questionService.updateQuestion(dto);
   }
 
@@ -44,7 +50,7 @@ export class QuestionsController {
   async deleteQuestion(
     @Param(UrlParams.QuestionId, IDParamPipe)
     questionId: QuestionEntity.Question['id']
-  ) {
+  ): Promise<void> {
     return this.questionService.deleteQuestion(questionId);
   }
 }

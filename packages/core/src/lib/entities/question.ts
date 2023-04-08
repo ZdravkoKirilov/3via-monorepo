@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 
 import * as AnswerEntity from './answer';
+import { moveArrayItem } from '../helpers';
 
 const createQuestionDtoParser = z.object({
   title: z.string(),
@@ -78,6 +79,39 @@ const updateAnswers = (
 
 const questionsParser = z.array(questionParser);
 
+const moveAnswer = (
+  direction: 'up' | 'down',
+  currentIndex: number,
+  question: Question
+): Question => {
+  const reorderedAnswers = moveArrayItem(
+    question.answers,
+    currentIndex,
+    direction === 'up' ? currentIndex - 1 : currentIndex + 1
+  );
+
+  const updatedQuestion = {
+    ...question,
+    answers: reorderedAnswers,
+  };
+
+  return updatedQuestion;
+};
+
+const moveQuestion = (
+  direction: 'up' | 'down',
+  currentIndex: number,
+  currentQuestions: Question[]
+) => {
+  const reorderedQuestions = moveArrayItem(
+    currentQuestions,
+    currentIndex,
+    direction === 'up' ? currentIndex - 1 : currentIndex + 1
+  );
+
+  return reorderedQuestions;
+};
+
 export {
   create,
   update,
@@ -89,4 +123,6 @@ export {
   addAnswer,
   removeAnswer,
   updateAnswers,
+  moveAnswer,
+  moveQuestion,
 };

@@ -1,40 +1,17 @@
-import styled from '@emotion/styled';
+import CssBaseline from '@mui/material/CssBaseline';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const StyledApp = styled.div`
-  // Your style here
-`;
+import QuizForm from '../quiz';
 
-export function App() {
+const queryClient = new QueryClient();
+
+function App() {
   return (
-    <StyledApp>
-      <h1>
-        <span> Hello there, </span>
-        Welcome client 👋
-      </h1>
-    </StyledApp>
+    <QueryClientProvider client={queryClient}>
+      <CssBaseline />
+      <QuizForm />
+    </QueryClientProvider>
   );
 }
 
 export default App;
-
-if (import.meta.vitest) {
-  // add tests related to your file here
-  // For more information please visit the Vitest docs site here: https://vitest.dev/guide/in-source.html
-
-  const { it, expect, beforeEach } = import.meta.vitest;
-  let render: any;
-
-  beforeEach(async () => {
-    render = (await import('@testing-library/react')).render;
-  });
-
-  it('should render successfully', () => {
-    const { baseElement } = render(<App />);
-    expect(baseElement).toBeTruthy();
-  });
-
-  it('should have a greeting as the title', () => {
-    const { getByText } = render(<App />);
-    expect(getByText(/Welcome client/gi)).toBeTruthy();
-  });
-}
