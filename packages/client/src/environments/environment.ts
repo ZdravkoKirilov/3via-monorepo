@@ -3,7 +3,5 @@
 
 export const environment = {
   production: false,
-  BASE_URL: process.env.BASE_URL || "http://localhost:3333/api",
-  QUERY_DEVTOOLS: false,
-  playerPortalUrl: "http://localhost:4002",
+  baseURL: 'http://localhost:3000/api/',
 } as const;

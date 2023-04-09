@@ -7,8 +7,9 @@ import {
   UrlParams,
   buildUrlWithParams,
 } from '@3via/core';
+import { environment } from '../../environments/environment';
 
-const baseURL = '/api/';
+const baseURL = environment.baseURL;
 
 const client = axios.create({
   baseURL,
