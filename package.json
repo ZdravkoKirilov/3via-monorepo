@@ -5,6 +5,9 @@
   "scripts": {
     "build-client": "nx run client:build:production"
   },
+  "engines": {
+    "node": "16.10.0"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "11.10.6",
