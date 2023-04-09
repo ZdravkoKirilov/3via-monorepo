@@ -67,7 +67,7 @@ export const UpsertQuestionForm: FC<Props> = ({
         Submit
       </LoadingButton>
 
-      {error && <Alert severity="error">Something went wrong.</Alert>}
+      {error && <Alert severity="error">{error}</Alert>}
     </Stack>
   );
 };

@@ -11,7 +11,7 @@ import {
 import { Close } from '@mui/icons-material';
 
 import { QuestionEntity } from '@3via/core';
-import { useQuestions } from '../helpers';
+import { toErrorMessage, useQuestions } from '../helpers';
 import { UpsertQuestionForm } from '../shared';
 
 export const useCreateQuestion = () => {
@@ -51,7 +51,7 @@ export const useCreateQuestion = () => {
           <Box p={2}>
             <UpsertQuestionForm
               isLoading={addQuestion.isLoading}
-              error={addQuestion.error ? 'Something went wrong' : ''}
+              error={addQuestion.error ? toErrorMessage(addQuestion.error) : ''}
               onSubmit={handleAddQuestion}
             />
           </Box>

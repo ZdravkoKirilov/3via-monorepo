@@ -6,20 +6,23 @@ import {
 } from '@nestjs/common';
 import { z } from 'zod';
 
+import { Errors, zodToDomain } from '@3via/core';
+
 @Injectable()
 export class ZodValidationPipe implements PipeTransform {
   constructor(private schema: z.Schema<unknown>) {}
 
   transform(value: unknown, metadata: ArgumentMetadata) {
     if (metadata.type === 'body') {
-      try {
-        const result = this.schema.parse(value);
+      const parsed = zodToDomain(this.schema, value);
 
-        return result;
-      } catch (err) {
-        throw new BadRequestException(err);
+      if (Errors.isCustomError(parsed)) {
+        throw new BadRequestException(new Errors.ParsingError(parsed));
       }
+
+      return parsed;
     }
+
     return value;
   }
 }
@@ -28,13 +31,13 @@ export class ZodValidationPipe implements PipeTransform {
 export class IDParamPipe implements PipeTransform {
   transform(value: unknown, metadata: ArgumentMetadata) {
     if (metadata.type === 'param') {
-      try {
-        const result = z.string().parse(value);
+      const parsed = zodToDomain(z.string(), value);
 
-        return result;
-      } catch (err) {
-        throw new BadRequestException(err);
+      if (Errors.isCustomError(parsed)) {
+        throw new BadRequestException(parsed);
       }
+
+      return parsed;
     }
 
     return value;

@@ -12,7 +12,7 @@ import { Close } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 
 import { AnswerEntity, QuestionEntity } from '@3via/core';
-import { useQuestions } from '../helpers';
+import { toErrorMessage, useQuestions } from '../helpers';
 
 type DeletePayload = {
   question: QuestionEntity.Question;
@@ -77,7 +77,9 @@ export const useDeleteAnswer = () => {
             </Stack>
 
             {editQuestion.isError && (
-              <Alert severity="error">Something went wrong.</Alert>
+              <Alert severity="error">
+                {toErrorMessage(editQuestion.error)}
+              </Alert>
             )}
           </Stack>
         </DialogContent>

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import {
   AppUrls,
+  Errors,
   QuestionEntity,
   UrlParams,
   buildUrlWithParams,
@@ -16,15 +17,18 @@ const client = axios.create({
 const getQuestions = (): Promise<QuestionEntity.Question[]> => {
   const url = AppUrls.questions;
 
-  return client.get(url).then((response) => {
-    const parsed = QuestionEntity.toEntities(response.data);
+  return client
+    .get(url)
+    .then((response) => {
+      const parsed = QuestionEntity.toEntities(response.data);
 
-    if (parsed.success) {
-      return parsed.data;
-    }
+      if (parsed.success) {
+        return parsed.data;
+      }
 
-    throw new Error('Something went wrong.');
-  });
+      throw new Errors.ParsingError(parsed.error.flatten().fieldErrors);
+    })
+    .catch(normalizeApiError);
 };
 
 const saveQuestions = (
@@ -32,15 +36,18 @@ const saveQuestions = (
 ): Promise<QuestionEntity.Question[]> => {
   const url = AppUrls.questions;
 
-  return client.put(url, newQuestions).then((response) => {
-    const parsed = QuestionEntity.toEntities(response.data);
+  return client
+    .put(url, newQuestions)
+    .then((response) => {
+      const parsed = QuestionEntity.toEntities(response.data);
 
-    if (parsed.success) {
-      return parsed.data;
-    }
+      if (parsed.success) {
+        return parsed.data;
+      }
 
-    throw new Error('Something went wrong.');
-  });
+      throw new Errors.ParsingError(parsed.error.flatten().fieldErrors);
+    })
+    .catch(normalizeApiError);
 };
 
 const addQuestion = (
@@ -48,15 +55,18 @@ const addQuestion = (
 ): Promise<QuestionEntity.Question> => {
   const url = AppUrls.questions;
 
-  return client.post(url, dto).then((response) => {
-    const parsed = QuestionEntity.toEntity(response.data);
+  return client
+    .post(url, dto)
+    .then((response) => {
+      const parsed = QuestionEntity.toEntity(response.data);
 
-    if (parsed.success) {
-      return parsed.data;
-    }
+      if (parsed.success) {
+        return parsed.data;
+      }
 
-    throw new Error('Something went wrong.');
-  });
+      throw new Errors.ParsingError(parsed.error.flatten().fieldErrors);
+    })
+    .catch(normalizeApiError);
 };
 
 const editQuestion = (
@@ -66,15 +76,18 @@ const editQuestion = (
     [UrlParams.QuestionId]: dto.id,
   });
 
-  return client.put(url, dto).then((response) => {
-    const parsed = QuestionEntity.toEntity(response.data);
+  return client
+    .put(url, dto)
+    .then((response) => {
+      const parsed = QuestionEntity.toEntity(response.data);
 
-    if (parsed.success) {
-      return parsed.data;
-    }
+      if (parsed.success) {
+        return parsed.data;
+      }
 
-    throw new Error('Something went wrong.');
-  });
+      throw new Errors.ParsingError(parsed.error.flatten().fieldErrors);
+    })
+    .catch(normalizeApiError);
 };
 
 const deleteQuestion = (id: QuestionEntity.Question['id']): Promise<void> => {
@@ -82,9 +95,12 @@ const deleteQuestion = (id: QuestionEntity.Question['id']): Promise<void> => {
     [UrlParams.QuestionId]: id,
   });
 
-  return client.delete(url).then(() => {
-    return undefined;
-  });
+  return client
+    .delete(url)
+    .then(() => {
+      return undefined;
+    })
+    .catch(normalizeApiError);
 };
 
 export const httpApi = {
@@ -93,4 +109,14 @@ export const httpApi = {
   editQuestion,
   deleteQuestion,
   saveQuestions,
+};
+
+const normalizeApiError = (err: unknown) => {
+  const apiError = Errors.toError(err);
+
+  if (apiError) {
+    throw apiError;
+  }
+
+  throw new Errors.UnexpectedError(apiError);
 };

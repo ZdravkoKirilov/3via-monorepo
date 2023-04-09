@@ -11,7 +11,7 @@ import {
 import { Close } from '@mui/icons-material';
 
 import { AnswerEntity, QuestionEntity } from '@3via/core';
-import { useQuestions } from '../helpers';
+import { toErrorMessage, useQuestions } from '../helpers';
 import { CreateAnswerForm } from '../shared';
 
 export const useCreateAnswer = () => {
@@ -58,7 +58,9 @@ export const useCreateAnswer = () => {
           <Box p={2}>
             <CreateAnswerForm
               isLoading={editQuestion.isLoading}
-              error={editQuestion.error ? 'Something went wrong' : ''}
+              error={
+                editQuestion.error ? toErrorMessage(editQuestion.error) : ''
+              }
               onSubmit={handleAddAnswer}
             />
           </Box>

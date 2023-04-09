@@ -1,21 +1,29 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { httpApi } from './http-api';
-import { QuestionEntity } from '@3via/core';
+import { Errors, QuestionEntity } from '@3via/core';
 
 const cacheKey = ['questions'];
 
 export const useQuestions = () => {
   const client = useQueryClient();
 
-  const query = useQuery(cacheKey, httpApi.getQuestions, {
-    refetchOnWindowFocus: false,
-  });
+  const query = useQuery<QuestionEntity.Question[], Errors.CustomError>(
+    cacheKey,
+    httpApi.getQuestions,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const existingQuestions =
     client.getQueryData<QuestionEntity.Question[]>(cacheKey) || [];
 
-  const addQuestion = useMutation(httpApi.addQuestion, {
+  const addQuestion = useMutation<
+    QuestionEntity.Question,
+    Errors.CustomError,
+    QuestionEntity.CreateQuestionDto
+  >(httpApi.addQuestion, {
     onSuccess: (response) => {
       client.setQueryData(cacheKey, [
         ...existingQuestions.filter((elem) => elem.id !== response.id),
@@ -24,7 +32,11 @@ export const useQuestions = () => {
     },
   });
 
-  const editQuestion = useMutation(httpApi.editQuestion, {
+  const editQuestion = useMutation<
+    QuestionEntity.Question,
+    Errors.CustomError,
+    QuestionEntity.Question
+  >(httpApi.editQuestion, {
     onSuccess: (response) => {
       client.setQueryData(
         cacheKey,
@@ -35,7 +47,11 @@ export const useQuestions = () => {
     },
   });
 
-  const deleteQuestion = useMutation(httpApi.deleteQuestion, {
+  const deleteQuestion = useMutation<
+    void,
+    Errors.CustomError,
+    QuestionEntity.Question['id']
+  >(httpApi.deleteQuestion, {
     onSuccess: () => {
       client.setQueryData(
         cacheKey,
@@ -46,7 +62,12 @@ export const useQuestions = () => {
     },
   });
 
-  const saveQuestions = useMutation(httpApi.saveQuestions, {
+  const saveQuestions = useMutation<
+    QuestionEntity.Question[],
+    Errors.CustomError,
+    QuestionEntity.Question[],
+    { revert: () => void }
+  >(httpApi.saveQuestions, {
     /* the operation is suitable for an optimistic update */
     onMutate: async (newQuestions) => {
       await client.cancelQueries(cacheKey);

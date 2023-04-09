@@ -9,9 +9,14 @@ import {
   UsePipes,
 } from '@nestjs/common';
 
-import { AppUrls, QuestionEntity, UrlParams } from '@3via/core';
+import { AppUrls, Errors, QuestionEntity, UrlParams } from '@3via/core';
 import { QuestionsService } from './questions.service';
-import { IDParamPipe, ZodValidationPipe } from '../shared';
+import {
+  IDParamPipe,
+  ZodValidationPipe,
+  toBadRequest,
+  toUnexpectedError,
+} from '../shared';
 
 @Controller()
 export class QuestionsController {
@@ -19,7 +24,20 @@ export class QuestionsController {
 
   @Get(AppUrls.questions)
   async getQuestions(): Promise<QuestionEntity.Question[]> {
-    return this.questionService.getQuestions();
+    return this.questionService.getQuestions().catch((err) => {
+      if (Errors.isCustomError(err)) {
+        switch (err.type) {
+          case Errors.ErrorTypes.ParsingError:
+            throw toUnexpectedError(err);
+          case Errors.ErrorTypes.DomainError:
+            throw toBadRequest(err);
+          default:
+            throw toUnexpectedError(err);
+        }
+      }
+
+      throw toUnexpectedError(new Errors.UnexpectedError(err));
+    });
   }
 
   @Post(AppUrls.questions)
@@ -27,7 +45,20 @@ export class QuestionsController {
   async createQuestion(
     @Body() dto: QuestionEntity.CreateQuestionDto
   ): Promise<QuestionEntity.Question> {
-    return this.questionService.createQuestion(dto);
+    return this.questionService.createQuestion(dto).catch((err) => {
+      if (Errors.isCustomError(err)) {
+        switch (err.type) {
+          case Errors.ErrorTypes.ParsingError:
+            throw toUnexpectedError(err);
+          case Errors.ErrorTypes.DomainError:
+            throw toBadRequest(err);
+          default:
+            throw toUnexpectedError(err);
+        }
+      }
+
+      throw toUnexpectedError(new Errors.UnexpectedError(err));
+    });
   }
 
   @Put(AppUrls.questions)
@@ -35,7 +66,20 @@ export class QuestionsController {
   async updateQuestions(
     @Body() dto: QuestionEntity.Question[]
   ): Promise<QuestionEntity.Question[]> {
-    return this.questionService.saveQuestions(dto);
+    return this.questionService.saveQuestions(dto).catch((err) => {
+      if (Errors.isCustomError(err)) {
+        switch (err.type) {
+          case Errors.ErrorTypes.ParsingError:
+            throw toUnexpectedError(err);
+          case Errors.ErrorTypes.DomainError:
+            throw toBadRequest(err);
+          default:
+            throw toUnexpectedError(err);
+        }
+      }
+
+      throw toUnexpectedError(new Errors.UnexpectedError(err));
+    });
   }
 
   @Put(AppUrls.question)
@@ -43,7 +87,20 @@ export class QuestionsController {
   async updateQuestion(
     @Body() dto: QuestionEntity.Question
   ): Promise<QuestionEntity.Question> {
-    return this.questionService.updateQuestion(dto);
+    return this.questionService.updateQuestion(dto).catch((err) => {
+      if (Errors.isCustomError(err)) {
+        switch (err.type) {
+          case Errors.ErrorTypes.ParsingError:
+            throw toUnexpectedError(err);
+          case Errors.ErrorTypes.DomainError:
+            throw toBadRequest(err);
+          default:
+            throw toUnexpectedError(err);
+        }
+      }
+
+      throw toUnexpectedError(new Errors.UnexpectedError(err));
+    });
   }
 
   @Delete(AppUrls.question)
@@ -51,6 +108,19 @@ export class QuestionsController {
     @Param(UrlParams.QuestionId, IDParamPipe)
     questionId: QuestionEntity.Question['id']
   ): Promise<void> {
-    return this.questionService.deleteQuestion(questionId);
+    return this.questionService.deleteQuestion(questionId).catch((err) => {
+      if (Errors.isCustomError(err)) {
+        switch (err.type) {
+          case Errors.ErrorTypes.ParsingError:
+            throw toUnexpectedError(err);
+          case Errors.ErrorTypes.DomainError:
+            throw toBadRequest(err);
+          default:
+            throw toUnexpectedError(err);
+        }
+      }
+
+      throw toUnexpectedError(new Errors.UnexpectedError(err));
+    });
   }
 }

@@ -13,7 +13,7 @@ import { Close } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 
 import { QuestionEntity } from '@3via/core';
-import { useQuestions } from '../helpers';
+import { toErrorMessage, useQuestions } from '../helpers';
 
 export const useDeleteQuestion = () => {
   const { deleteQuestion } = useQuestions();
@@ -68,7 +68,9 @@ export const useDeleteQuestion = () => {
             </Box>
 
             {deleteQuestion.isError && (
-              <Alert severity="error">Something went wrong.</Alert>
+              <Alert severity="error">
+                {toErrorMessage(deleteQuestion.error)}
+              </Alert>
             )}
           </Stack>
         </DialogContent>

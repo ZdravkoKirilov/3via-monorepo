@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 import {
   AppBar,
   Container,
@@ -8,18 +8,18 @@ import {
   Fab,
   CircularProgress,
   Alert,
-} from "@mui/material";
-import { Add } from "@mui/icons-material";
+} from '@mui/material';
+import { Add } from '@mui/icons-material';
 
-import { useQuestions } from "../helpers";
-import { useCreateQuestion } from "./useCreateQuestion";
-import { useEditQuestion } from "./useEditQuestion";
-import { useDeleteQuestion } from "./useDeleteQuestion";
-import { useCreateAnswer } from "./useCreateAnswer";
-import { useDeleteAnswer } from "./useDeleteAnswer";
-import { useMoveQuestion } from "./useMoveQuestion";
-import { useMoveAnswer } from "./useMoveAnswer";
-import QuestionCard from "./question";
+import { toErrorMessage, useQuestions } from '../helpers';
+import { useCreateQuestion } from './useCreateQuestion';
+import { useEditQuestion } from './useEditQuestion';
+import { useDeleteQuestion } from './useDeleteQuestion';
+import { useCreateAnswer } from './useCreateAnswer';
+import { useDeleteAnswer } from './useDeleteAnswer';
+import { useMoveQuestion } from './useMoveQuestion';
+import { useMoveAnswer } from './useMoveAnswer';
+import QuestionCard from './question';
 
 const RefinedQuizForm: FC = () => {
   const { query, editQuestion } = useQuestions();
@@ -50,7 +50,7 @@ const RefinedQuizForm: FC = () => {
   }
 
   if (query.isError) {
-    return <Alert severity="error">Something went wrong.</Alert>;
+    return <Alert severity="error">{toErrorMessage(query.error)}</Alert>;
   }
 
   return (

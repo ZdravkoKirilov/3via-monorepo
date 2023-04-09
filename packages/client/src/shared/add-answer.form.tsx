@@ -60,7 +60,7 @@ export const CreateAnswerForm: FC<Props> = ({ isLoading, error, onSubmit }) => {
         Submit
       </LoadingButton>
 
-      {error && <Alert severity="error">Something went wrong.</Alert>}
+      {error && <Alert severity="error">{error}</Alert>}
     </Stack>
   );
 };
