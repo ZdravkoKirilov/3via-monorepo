@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import QuizForm from '../quiz';
+import QuizForm from './quiz';
 
 const queryClient = new QueryClient();
 
