@@ -2,7 +2,9 @@
   "name": "3via-monorepo",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build-client": "nx run client:build:production"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "11.10.6",
